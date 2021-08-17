@@ -112,11 +112,6 @@ if (! (project.gradle.startParameter.taskNames.join(",").toLowerCase().contains(
 repositories {
     mavenLocal()
     mavenCentral()
-    jcenter()
-
-    maven {
-        url "https://mvnrepository.com/artifact/com.vaadin/vaadin"
-    }
 
 }
 
@@ -208,10 +203,10 @@ publishing {
                 }
             }
             pom {
-                name = 'Docx Template filler'
+                name = 'Documento Tools'
                 packaging = 'jar'
                 // optionally artifactId can be defined here 
-                description = 'Docx Template Filler'
+                description = 'Documento Tools'
                 url = 'https://github.com/mdre/docxtemplater'
 
                 // properties = [
@@ -232,9 +227,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection = 'scm:git:git://github.com/mdre/docxtemplater.git'
-                    developerConnection = 'scm:git:ssh://github.com/mdre/docxtemplater.git'
-                    url = 'https://github.com/mdre/docxtemplater'
+                    connection = 'scm:git:git://github.com/mdre/doctools.git'
+                    developerConnection = 'scm:git:ssh://github.com/mdre/doctools.git'
+                    url = 'https://github.com/mdre/doctools'
                 }
             }
         }

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package com.github.mdre.templater;
+package com.github.mdre.doctools;
 
 import java.util.ArrayList;
 import java.util.Iterator;
