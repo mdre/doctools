@@ -116,8 +116,19 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.apache.poi:poi-ooxml:5.0.0'
     
+    // con este funciona el reemplazo
+    implementation 'org.apache.poi:poi-ooxml:4.1.2'
+    
+    implementation 'org.apache.poi:poi:4.1.2'
+    implementation 'org.apache.poi:poi-scratchpad:4.1.2'
+    implementation 'org.apache.poi:poi-ooxml-schemas:4.1.2'
+    implementation 'org.apache.poi:poi-excelant:4.1.2'
+    //implementation 'fr.opensagres.xdocreport:org.apache.poi.xwpf.converter.core:2.0.+'
+   // implementation 'fr.opensagres.xdocreport:org.apache.poi.xwpf.converter.pdf-gae:2.0.+'
+   implementation 'fr.opensagres.xdocreport:fr.opensagres.poi.xwpf.converter.core-gae:2.0.2'
+    implementation 'fr.opensagres.xdocreport:fr.opensagres.poi.xwpf.converter.pdf-gae:2.0.2'
+    //implementation 'fr.opensagres.xdocreport:org.apache.poi.xwpf.converter.pdf.itext5:1.0.6'
     testImplementation "junit:junit:[4,)"
 }
 

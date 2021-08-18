@@ -5,8 +5,6 @@
  */
 package com.github.mdre.doctools;
 
-import com.github.mdre.doctools.DocumentTools;
-import com.github.mdre.doctools.FillerCommand;
 import java.io.File;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -50,12 +48,51 @@ public class DocumentToolsTest {
         FillerCommand fillData = new FillerCommand()
                                             .add("${nombre}", "Elba Gallo")
                                             .add("${numero}", "1234")
-                                            .add("${texto}", "texto");
-        DocumentTools.fill(template, out, fillData);
+                                            .add("${texto}", "texto")
+                                            .add("${header}", "Cabecera!!")
+                                            .add("${footer}", "pata 1!!")
+                                            .add("${footer2}", "pata 2!!")
+                ;
+        DocumentTools dft = new DocumentTools(template).fill(fillData).save(out);
         // TODO review the generated test code and remove the default call to fail.
         
-        System.out.println("agregar un watermark");
-        DocumentTools.addWatermark(out, "Borrador");
     }
+    
+    @Test
+    public void testAddWatermark() throws Exception {
+        System.out.println("agregar un watermark");
+        File in = new File("/tmp/1/template_filled.docx");
+        File out = new File("/tmp/1/template_filled_with_watermark.docx");
+        DocumentTools dft = new DocumentTools(in).addWatermark("Borrador").save(out);
+    }
+    
+    @Test
+    public void testRemoveWatermark() throws Exception {
+        System.out.println("quitar un watermark");
+        File in = new File("/tmp/1/template_filled_with_watermark.docx");
+        File out = new File("/tmp/1/template_filled_without_watermark.docx");
+        DocumentTools dft = new DocumentTools(in).removeWatermark().save(out);
+    }
+    
+    @Test
+    public void testHeader() throws Exception {
+        System.out.println("agregar header");
+        File in = new File("/tmp/1/template_filled.docx");
+        File out = new File("/tmp/1/template_filled_with_header.docx");
+        DocumentTools dft = new DocumentTools(in).addHeader("cabecera de prueba").save(out);
+    }
+    
+    
+    
+    @Test
+    public void testToPdf() throws Exception {
+        System.out.println("Convertir a PDF");
+        File in = new File("/tmp/1/template_filled.docx");
+        File outPdf = new File("/tmp/1/template_filled.pdf");
+        DocumentTools dft = new DocumentTools(in).convertToPDF(outPdf);
+    }
+    
+    
+    
     
 }
