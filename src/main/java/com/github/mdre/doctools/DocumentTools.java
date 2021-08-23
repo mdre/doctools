@@ -16,6 +16,7 @@ import com.microsoft.schemas.vml.CTShape;
 import com.microsoft.schemas.vml.CTShapetype;
 import com.microsoft.schemas.vml.CTTextPath;
 import com.microsoft.schemas.vml.STExt;
+import com.microsoft.schemas.vml.STTrueFalse;
 import fr.opensagres.poi.xwpf.converter.pdf.PdfConverter;
 import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
 import java.io.File;
@@ -35,7 +36,7 @@ import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTrueFalse;
+import org.apache.xmlbeans.XmlObject;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
@@ -164,32 +165,65 @@ public class DocumentTools {
     }
 
     public DocumentTools removeWatermark() throws IOException {
-
-        XWPFHeaderFooterPolicy headerFooterPolicy = doc.getHeaderFooterPolicy();
-        if (headerFooterPolicy == null) {
-            headerFooterPolicy = doc.createHeaderFooterPolicy();
+        removeWatermark(HeaderFooterType.DEFAULT,HeaderFooterType.EVEN,HeaderFooterType.FIRST);
+        return this;
+    }
+    
+    public DocumentTools removeWatermark(HeaderFooterType... hft) throws IOException {
+        if (hft.length == 0) {
+            hft = new HeaderFooterType[1];
+            hft[0] = HeaderFooterType.DEFAULT;
         }
+        
+        for (HeaderFooterType headerFooterType : hft) {
+            
+            for (XWPFHeader hdr : doc.getHeaderList()) {
+                for (XWPFParagraph p : hdr.getParagraphs()) {
+                    for (CTR ctr : p.getCTP().getRList()) {
+                        
+                        for (int i = 0; i < ctr.getPictArray().length; i++) {
+                            CTPicture pic = ctr.getPictArray(i);
+                            org.apache.xmlbeans.XmlObject[] xmlobjects = pic.selectChildren(new javax.xml.namespace.QName("urn:schemas-microsoft-com:vml", "shape"));
+                            for (XmlObject xmlo : xmlobjects) {
+                                com.microsoft.schemas.vml.CTShape ctshape = (com.microsoft.schemas.vml.CTShape) xmlo;
+                                if (ctshape.getId().startsWith("PowerPlusWaterMarkObject")) {
+                                    ctr.removePict(i);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
-        // create default Watermark - fill color black and not rotated
-        headerFooterPolicy.createWatermark("");
-        // get the default header
-        // Note: createWatermark also sets FIRST and EVEN headers 
-        // but this code does not updating those other headers
-        XWPFHeader header = headerFooterPolicy.getHeader(XWPFHeaderFooterPolicy.DEFAULT);
-        XWPFParagraph paragraph = header.getParagraphArray(0);
-
-        // get com.microsoft.schemas.vml.CTShape where fill color and rotation is set
-        org.apache.xmlbeans.XmlObject[] xmlobjects = paragraph.getCTP().getRArray(0).getPictArray(0).selectChildren(
-                new javax.xml.namespace.QName("urn:schemas-microsoft-com:vml", "shape"));
-
-        if (xmlobjects.length > 0) {
-            com.microsoft.schemas.vml.CTShape ctshape = (com.microsoft.schemas.vml.CTShape) xmlobjects[0];
-            // set fill color
-            ctshape.setFillcolor("#ffffffff");
-            // set rotation
-            ctshape.setStyle(ctshape.getStyle() + ";rotation:0");
-            //System.out.println(ctshape);
         }
+        
+        //=====================================================
+        // Borrar todo lo que sigue.
+//        XWPFHeaderFooterPolicy headerFooterPolicy = doc.getHeaderFooterPolicy();
+//        if (headerFooterPolicy == null) {
+//            headerFooterPolicy = doc.createHeaderFooterPolicy();
+//        }
+//
+//        // create default Watermark - fill color black and not rotated
+//        headerFooterPolicy.createWatermark("");
+//        // get the default header
+//        // Note: createWatermark also sets FIRST and EVEN headers 
+//        // but this code does not updating those other headers
+//        XWPFHeader header = headerFooterPolicy.getHeader(XWPFHeaderFooterPolicy.DEFAULT);
+//        XWPFParagraph paragraph = header.getParagraphArray(0);
+//
+//        // get com.microsoft.schemas.vml.CTShape where fill color and rotation is set
+//        org.apache.xmlbeans.XmlObject[] xmlobjects = paragraph.getCTP().getRArray(0).getPictArray(0).selectChildren(
+//                new javax.xml.namespace.QName("urn:schemas-microsoft-com:vml", "shape"));
+//
+//        if (xmlobjects.length > 0) {
+//            com.microsoft.schemas.vml.CTShape ctshape = (com.microsoft.schemas.vml.CTShape) xmlobjects[0];
+//            // set fill color
+//            ctshape.setFillcolor("#ffffffff");
+//            // set rotation
+//            ctshape.setStyle(ctshape.getStyle() + ";rotation:0");
+//            //System.out.println(ctshape);
+//        }
         return this;
 
     }

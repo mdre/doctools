@@ -79,8 +79,8 @@ public class DocumentToolsTest {
     @Test
     public void testRemoveWatermark() throws Exception {
         System.out.println("quitar un watermark");
-        File in = new File(System.getProperty("user.dir") + "/src/test/resources/template_filled_with_watermark.docx");
-        File out = new File(System.getProperty("user.dir") + "/src/test/resources/template_filled_without_watermark.docx");
+        File in = new File(System.getProperty("user.dir") + "/src/test/resources/rwm_to_remove_watermark.docx");
+        File out = new File(System.getProperty("user.dir") + "/src/test/resources/rwm_without_watermark.docx");
         DocumentTools dft = new DocumentTools(in).removeWatermark().save(out);
     }
     
